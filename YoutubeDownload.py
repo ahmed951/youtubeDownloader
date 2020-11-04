@@ -15,6 +15,7 @@ if(vidOrList == 'p'):
     
     class Page(QWebEnginePage): 
         def __init__(self, url): 
+            print("Please wait ...")
             self.app = QApplication(sys.argv) 
             QWebEnginePage.__init__(self) 
             self.html = '' 
