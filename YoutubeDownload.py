@@ -1,12 +1,16 @@
 # Importing libraries 
 import bs4 as bs 
 from pytube import YouTube
+import math
+#from progressbar import ProgressBar
+import threading
 
 vidOrList = input("Enter (v) if you want to download a video or (p) if you want to download a playlist : ")
 
 if(vidOrList == 'p'):
     import sys 
     import urllib.request 
+    
     from PyQt5.QtWebEngineWidgets import QWebEnginePage 
     from PyQt5.QtWidgets import QApplication 
     from PyQt5.QtCore import QUrl 
@@ -86,14 +90,21 @@ if(vidOrList == 'p'):
         
     count = 1
 
+    def progress_function(stream, chunk, bytes_remaining):
+        print(round((1-bytes_remaining/video.filesize)*100, 3), '% done...',end = '\r')
     playlist = sorted(set(playlist), key = playlist.index)
+
     vquality = input("Enter the video quality (720,360):")
     vquality=vquality+"p"
     path = input("Enter the path : ")
-
+    if(path == 'cse'):
+        path = 'D:/Users/Rosser03/Downloads/Video/3rd computer'
+    elif(path == 'video'):
+        path = 'D:/Users/Rosser03/Downloads/Video'
+        
     for link in playlist:
         try:
-            yt = YouTube(link) #get downloading links
+            yt = YouTube(link,on_progress_callback=progress_function) #get downloading links
             videos= yt.streams.filter(progressive=True,mime_type="video/mp4",res=vquality)
             video = videos[0]
             
@@ -113,6 +124,7 @@ if(vidOrList == 'p'):
                 count += 1
                 continue
 
+        print('FileSize : ' + str(round(video.filesize/(1024*1024))) + 'MB')        
         print(yt.title + " - is downloading ...")
         video.download(path)
         print(yt.title + " - has been downloaded !!!")
@@ -123,17 +135,50 @@ if(vidOrList == 'p'):
             if failed download another quality
         
         """
+
+    
+
 elif(vidOrList == 'v'):
+    
+    # Prints something like "15.555% done..." 
+    def progress_function(stream, chunk, bytes_remaining):
+        print(round((1-bytes_remaining/video.filesize)*100, 3), '% done...',end = '\r')
+
+    
     url = input("Enter the Youtube Video URL :")
-    yt = YouTube(url)
+    yt = YouTube(url,on_progress_callback=progress_function)
+    videoForSize = yt.streams.filter(progressive=True,mime_type="video/mp4")
+    print('FileSize (360p) : ' + str(round(videoForSize[0].filesize/(1024*1024))) + 'MB')
+    if( 1 < len(videoForSize) ):
+        print('FileSize (720p) : ' + str(round(videoForSize[1].filesize/(1024*1024))) + 'MB')
+    else:
+        print('720p is not available')
+           
     vquality = input("Enter the video quality (720,360):")
     vquality=vquality+"p"
     path = input("Enter the path : ")
+    if(path == 'cse'):
+        path = 'D:/CSE 3rd Videos'
+    elif(path == 'co'):
+        path = 'D:/CSE 3rd Videos/co'
+    elif(path == 'sw'):
+        path = 'D:/CSE 3rd Videos/sw'
+    elif(path == 'dc'):
+        path = 'D:/CSE 3rd Videos/dc'
+    elif(path == 'pm'):
+        path = 'D:/CSE 3rd Videos/pm'
+    elif(path == 'control'):
+        path = 'D:/CSE 3rd Video/control'
+    elif(path == 'video'):
+        path = 'C:/Users/ju/Downloads/Video'
     videos= yt.streams.filter(progressive=True,mime_type="video/mp4",res=vquality)
     video = videos[0]
+    
     print(yt.title + " - is downloading ...")
     video.download(path)
+
     print(yt.title + " - has been downloaded !!!")
+    
 
 
 
