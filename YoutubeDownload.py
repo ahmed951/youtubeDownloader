@@ -2,7 +2,7 @@
 import bs4 as bs 
 from pytube import YouTube
 import math
-#from progressbar import ProgressBar
+
 import threading
 
 vidOrList = input("Enter (v) if you want to download a video or (p) if you want to download a playlist : ")
@@ -131,7 +131,7 @@ if(vidOrList == 'p'):
         count += 1 
 
         """ 
-            idea : get the failed videos and put it in an array and then download them again with the same res 
+            TODO : get the failed videos and put it in an array and then download them again with the same res 
             if failed download another quality
         
         """
@@ -140,7 +140,7 @@ if(vidOrList == 'p'):
 
 elif(vidOrList == 'v'):
     
-    # Prints something like "15.555% done..." 
+    # Prints video % like "15.50% done..." 
     def progress_function(stream, chunk, bytes_remaining):
         print(round((1-bytes_remaining/video.filesize)*100, 3), '% done...',end = '\r')
 
@@ -157,20 +157,7 @@ elif(vidOrList == 'v'):
     vquality = input("Enter the video quality (720,360):")
     vquality=vquality+"p"
     path = input("Enter the path : ")
-    if(path == 'cse'):
-        path = 'D:/CSE 3rd Videos'
-    elif(path == 'co'):
-        path = 'D:/CSE 3rd Videos/co'
-    elif(path == 'sw'):
-        path = 'D:/CSE 3rd Videos/sw'
-    elif(path == 'dc'):
-        path = 'D:/CSE 3rd Videos/dc'
-    elif(path == 'pm'):
-        path = 'D:/CSE 3rd Videos/pm'
-    elif(path == 'control'):
-        path = 'D:/CSE 3rd Video/control'
-    elif(path == 'video'):
-        path = 'C:/Users/ju/Downloads/Video'
+   
     videos= yt.streams.filter(progressive=True,mime_type="video/mp4",res=vquality)
     video = videos[0]
     
